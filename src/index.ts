@@ -11,19 +11,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools: tools };
 });
 
-const ForecastArgumentsSchema = z.object({
-  latitude: z.number().min(-90).max(90),
-  longitude: z.number().min(-180).max(180),
-});
-
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
   try {
     const plugin = cocosMcpServer.findPlugin(name);
     if (plugin) {
-      const params = ForecastArgumentsSchema.parse(args);
+      // 校验参数，可以考虑放在Creator插件里面做
+      // const params = ForecastArgumentsSchema.parse(args);
       // 执行能力
-      const ret = await plugin.runCmd(name, params);
+      const ret = await plugin.runCmd(name, args);
       return { content: [{ type: "text", text: ret || "Failed" }] };
     } else {
       throw new Error(`Unknown tool: ${name}`);
