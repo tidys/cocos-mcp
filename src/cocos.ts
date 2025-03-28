@@ -1,4 +1,7 @@
 import * as WS from "ws";
+import detectPort from "detect-port";
+import fkill from "fkill";
+
 enum CMD {
   Test = "test",
   ListTools = "list-tools",
@@ -54,7 +57,7 @@ class PluginClient {
   }
 }
 class CocosMcpServer {
-  server: WS.Server;
+  server: WS.Server | null = null;
   /**
    * 连接的端口号
    */
@@ -63,9 +66,15 @@ class CocosMcpServer {
    * 所有连接的插件客户端
    */
   pluins: PluginClient[] = [];
-  constructor() {
+  async run() {
+    debugger;
+    const port = await detectPort(this.port);
+    if (this.port !== port) {
+      await fkill(`:${this.port}`, { force: true });
+    }
+
     this.server = new WS.Server({ port: this.port });
-    this.server.on("connection", (socket) => {
+    this.server!.on("connection", (socket) => {
       const plugin = new PluginClient(socket);
       plugin.addCloseListener(() => {
         this.pluins = this.pluins.filter((item) => item !== plugin);

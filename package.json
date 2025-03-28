@@ -10,6 +10,7 @@
         "cli": "node ./dist/cli.js",
         "build-watch": "tsc -w",
         "cocos-server": "node ./dist/cocos.js",
+        "index": "node ./dist/index.js",
         "debug": "npx -y @modelcontextprotocol/inspector node ./dist/index.js"
     },
     "author": "",
@@ -19,6 +20,8 @@
         "@modelcontextprotocol/sdk": "^1.7.0",
         "@types/ws": "^8.18.0",
         "commander": "^8.3.0",
+        "detect-port": "^2.1.0",
+        "fkill": "7.0.1",
         "ws": "^8.18.1",
         "zod": "^3.24.2"
     },
